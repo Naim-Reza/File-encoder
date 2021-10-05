@@ -13,7 +13,7 @@ public class DecodeEngine {
     private String decodingMethod = null;
     private byte[] fileData;
 
-    public void decode(String encodedString){
+    public boolean decode(String encodedString){
         //separate the data from the encoded string
         String[] dataArray = encodedString.split(lineSeparator);
         //set output file name
@@ -33,6 +33,7 @@ public class DecodeEngine {
                 break;
             default:
                 System.out.println("Decoding Method Not Supported!!");
+                return false;
         }
 
         try {
@@ -49,6 +50,9 @@ public class DecodeEngine {
         //prompt success message
         System.out.println("Decoding successful.");
         System.out.println("Output filename: " + outputFileName);
+
+        //return ture
+        return true;
     }
 
     private void useBase64Decoding(String data){

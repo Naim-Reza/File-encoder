@@ -1,8 +1,6 @@
 package reza.encoder;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class FileEncoder {
@@ -11,6 +9,7 @@ public class FileEncoder {
     private static int PORT = 5000; //default PORT
     private static Socket socket;
     private static PrintWriter writer;
+    private static BufferedReader reader;
 
 
     public static void main(String[] args) {
@@ -36,6 +35,8 @@ public class FileEncoder {
             connect();
             //send the encoded string to the server
             write(encodedString);
+            //read response from the server
+            //getResponse();
 
 
         } catch (ArrayIndexOutOfBoundsException e){
@@ -48,6 +49,7 @@ public class FileEncoder {
         try{
             socket = new Socket(getIP(), getPORT());
             writer = new PrintWriter(socket.getOutputStream());
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             System.out.println("Connected to " + getIP() + " at port: " + getPORT());
         } catch (IOException e){
             e.printStackTrace();
@@ -61,6 +63,16 @@ public class FileEncoder {
             writer.flush();
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    //get response from the server
+    public static void getResponse(){
+        try {
+            System.out.println(reader.readLine());
+            reader.close();
+        } catch (IOException e){
+            System.out.println("Error reading response from server...");
         }
     }
 
