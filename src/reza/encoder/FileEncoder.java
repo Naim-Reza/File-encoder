@@ -13,7 +13,7 @@ public class FileEncoder {
             String[] serverInfo = args[2].split(portSeparator);
 
             //read and encode the file
-            
+
 
         } catch (ArrayIndexOutOfBoundsException e){
             e.printStackTrace();
