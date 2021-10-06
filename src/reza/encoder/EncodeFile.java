@@ -12,7 +12,7 @@ public class EncodeFile {
     public String encode(File file, String encodingMethod) {
         try{
             //check if the provided file is a file or not
-            if (!file.isFile()) return "Not a file.";
+            if (!file.isFile()) return "";
 
             //create reader
             BufferedInputStream reader = new BufferedInputStream(new FileInputStream(file));
