@@ -49,22 +49,19 @@ public class DecodeServer {
 
         //constructor
         public ClientHandler(Socket clientSocket){
-            try{
-                socket = clientSocket;
-                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                writer = new PrintWriter(socket.getOutputStream());
-            } catch (IOException e){
-                e.printStackTrace();
-            }
+            socket = clientSocket;
         }
 
         @Override
         public void run() {
             try{
                 //read encoded string
-                String line = null;
-                while ((line = reader.readLine()) != null) encodedString += line;
-                reader.close();
+                System.out.println("Reading Data.....");
+                reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                encodedString = reader.readLine();
+
+                System.out.println("Decoding...");
+
 
                 //decode the string and save local
                 boolean decoded = decoder.decode(encodedString);
@@ -84,9 +81,15 @@ public class DecodeServer {
         }
 
         public void sendResponse(String message){
-            writer.write(message);
-            writer.flush();
-            System.out.println("method called: " + message);
+            try {
+                writer = new PrintWriter(socket.getOutputStream());
+                writer.println(message);
+                writer.flush();
+                System.out.println("Response sent to client...");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 

@@ -20,11 +20,14 @@ public class FileEncoder {
         try{
             File file = new File(args[0]);
             String encodingMethod = args[1];
-            String[] serverInfo = args[2].split(portSeparator);
 
-            //set IP and PORT
-            setIP(serverInfo[0]);
-            setPORT(Integer.parseInt(serverInfo[1]));
+            if (args.length > 2){
+                String[] serverInfo = args[2].split(portSeparator);
+
+                //set IP and PORT
+                setIP(serverInfo[0]);
+                setPORT(Integer.parseInt(serverInfo[1]));
+            }
 
             //read and encode the file
             encodedString = encoder.encode(file, encodingMethod);
@@ -36,7 +39,7 @@ public class FileEncoder {
             //send the encoded string to the server
             write(encodedString);
             //read response from the server
-            //getResponse();
+            getResponse();
 
 
         } catch (ArrayIndexOutOfBoundsException e){
@@ -48,9 +51,7 @@ public class FileEncoder {
     public static void connect(){
         try{
             socket = new Socket(getIP(), getPORT());
-            writer = new PrintWriter(socket.getOutputStream());
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            System.out.println("Connected to " + getIP() + " at port: " + getPORT());
+            System.out.println("Connected to " + socket.getLocalAddress() + " at port: " + socket.getPort());
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -59,7 +60,10 @@ public class FileEncoder {
     //write with the output stream
     public static void write(String data){
         try{
+            System.out.println("Writing to server...");
+            writer = new PrintWriter(socket.getOutputStream());
             writer.write(data);
+            writer.println();
             writer.flush();
         } catch (Exception e){
             e.printStackTrace();
@@ -69,8 +73,11 @@ public class FileEncoder {
     //get response from the server
     public static void getResponse(){
         try {
-            System.out.println(reader.readLine());
-            reader.close();
+            System.out.println("Reading from server....");
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String message = reader.readLine();
+            System.out.println(message);
+
         } catch (IOException e){
             System.out.println("Error reading response from server...");
         }
