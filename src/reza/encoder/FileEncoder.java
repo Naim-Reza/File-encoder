@@ -16,6 +16,8 @@ public class FileEncoder {
         String encodedString;
         //create instance of EncodeFile class
         EncodeFile encoder = new EncodeFile();
+        //create an instance of Utility class to view help text
+        Utility utility = new Utility();
 
         try{
             File file = new File(args[0]);
@@ -34,12 +36,15 @@ public class FileEncoder {
             encodedString = encoder.encode(file, encodingMethod);
             //check if the output string is empty or not
             if (encodedString.equals("")) {
-                System.err.println("Error Encoding File...!!!");
+                utility.displayHelp("Error Encoding File...!!!");
                 return;
             }
 
             //create connection with the server
-            if (!connect()) return;
+            if (!connect()) {
+                utility.displayHelp();
+                return;
+            }
             //send the encoded string to the server
             write(encodedString);
             //read response from the server
@@ -47,7 +52,7 @@ public class FileEncoder {
 
 
         } catch (ArrayIndexOutOfBoundsException e){
-            e.printStackTrace();
+            utility.displayHelp();
         }
     }
 
